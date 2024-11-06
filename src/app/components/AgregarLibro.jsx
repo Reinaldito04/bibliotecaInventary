@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { FaBook, FaSave, FaTimes } from "react-icons/fa";
-
+import { axiosInstance } from "../utils/axiosinstace";
+import { getToken } from "../utils/Token";
 function AgregarLibro() {
+
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -16,6 +18,19 @@ function AgregarLibro() {
     ubicacion: "",
   });
 
+  const clearInputs = () => {
+    setFormData({
+      title: "",
+      author: "",
+      category: "",
+      stock: "",
+      description: "",
+      editorial: "",
+      year: "",
+      pages: "",
+      ubicacion: "",
+    });
+  }
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
@@ -25,11 +40,48 @@ function AgregarLibro() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Datos del libro:", formData);
+  
+    const libro = {
+      Titulo: formData.title,
+      Autor: formData.author,
+      genero: formData.category,
+      cantidad_total: formData.stock,
+      cantidad_disponible: formData.stock,
+      Descripcion: formData.description,
+      Editorial: formData.editorial,
+      anio_publicacion: formData.year,
+      Paginas: formData.pages,
+      Ubicacion: formData.ubicacion,
+    };
+    console.log("Libro:", libro);
+  
+    try {
+      await axiosInstance.post("/books/agg", libro, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      alert("Libro agregado con éxito");
+    } catch (error) {
+      if (error.response) {
+        // El servidor respondió con un código de error (por ejemplo, 400)
+        alert("Error al agregar el libro: " + error.response.data.detail);
+      } else {
+        // Error de red u otro problema inesperado
+        console.error("Error al agregar el libro:", error);
+        alert("Error al agregar el libro: " + error.message);
+      }
+    }
+
+    clearInputs();
+  
     toggleModal();
   };
+  
 
   return (
     <div className="p-6">

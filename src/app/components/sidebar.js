@@ -1,22 +1,39 @@
-'use client'
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Importa el router
-import { FaHome, FaUser, FaCog, FaChartBar, FaBell, FaChevronLeft, FaChevronRight, FaBook } from 'react-icons/fa';
-import Link from 'next/link';
-import Breadcrumbs from './Breadcrumbs';
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { FaHome, FaUser, FaCog, FaChartBar, FaBell, FaChevronLeft, FaChevronRight, FaBook } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const router = useRouter(); // Inicializa el router
+  const router = useRouter();
 
   useEffect(() => {
-    // Verifica si el token existe en el localStorage
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
+
     if (!token) {
       // Si no existe el token, redirige al login
-      router.push('/');
+      router.push("/");
+    } else {
+      try {
+        // Decodifica el token para obtener la fecha de expiración
+        const decodedToken = jwtDecode(token); // Usar la función directamente sin necesidad de un `default`
+        const expirationTime = decodedToken.exp * 1000; // Convierte la expiración a milisegundos
+        const currentTime = Date.now();
+
+        if (currentTime >= expirationTime) {
+          // Si el token ha expirado, redirige al login
+          localStorage.removeItem("access_token"); // Elimina el token caducado
+          router.push("/"); // Redirige al login
+        }
+      } catch (error) {
+        console.error("Error decodificando el token:", error);
+        localStorage.removeItem("access_token");
+        router.push("/"); // Redirige al login si hay un error en la decodificación
+      }
     }
-  }, [router]); // Se ejecuta una sola vez al montar el componente
+  }, [router]);
 
   return (
     <div className="flex min-h-screen bg-gray-100 text-gray-900">
@@ -67,7 +84,7 @@ export default function Layout({ children }) {
         </header>
   
         {/* Page Content */}
-        <main className="p-6 flex-grow bg-white shadow-lg rounded-lg m-4 overflow-auto max-h-[calc(100vh-7rem)]"> {/* Ajusta la altura máxima según sea necesario */}
+        <main className="p-6 flex-grow bg-white shadow-lg rounded-lg m-4 overflow-auto max-h-[calc(100vh-7rem)]">
           {children}
         </main>
       </div>
