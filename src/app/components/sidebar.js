@@ -1,12 +1,22 @@
-// components/Layout.js
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'; // Importa el router
 import { FaHome, FaUser, FaCog, FaChartBar, FaBell, FaChevronLeft, FaChevronRight, FaBook } from 'react-icons/fa';
 import Link from 'next/link';
 import Breadcrumbs from './Breadcrumbs';
 
 export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter(); // Inicializa el router
+
+  useEffect(() => {
+    // Verifica si el token existe en el localStorage
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      // Si no existe el token, redirige al login
+      router.push('/');
+    }
+  }, [router]); // Se ejecuta una sola vez al montar el componente
 
   return (
     <div className="flex min-h-screen bg-gray-100 text-gray-900">

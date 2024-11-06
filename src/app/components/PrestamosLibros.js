@@ -61,7 +61,7 @@ function PrestamosLibros() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Fecha de Préstamo</label>
+          <label className="block text-sm font-medium text-gray-700 ">Fecha de Préstamo</label>
           <input
             type="date"
             name="fechaPrestamo"

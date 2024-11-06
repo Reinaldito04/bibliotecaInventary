@@ -1,25 +1,40 @@
 'use client'
-import React, { useState } from 'react';
-
-const librosData = [
-  { id: 1, titulo: 'El Principito', autor: 'Antoine de Saint-Exupéry', stockTotal: 20, prestados: 2 },
-  { id: 2, titulo: 'Cien años de soledad', autor: 'Gabriel García Márquez', stockTotal: 15, prestados: 3 },
-  { id: 3, titulo: '1984', autor: 'George Orwell', stockTotal: 10, prestados: 1 },
-  { id: 4, titulo: 'El gran Gatsby', autor: 'F. Scott Fitzgerald', stockTotal: 12, prestados: 4 },
-  { id: 5, titulo: 'Moby Dick', autor: 'Herman Melville', stockTotal: 8, prestados: 0 },
-  { id: 6, titulo: 'Orgullo y prejuicio', autor: 'Jane Austen', stockTotal: 5, prestados: 1 },
-];
+import React, { useEffect, useState } from 'react';
+import { axiosInstance } from '../utils/axiosinstace';
 
 const itemsPerPage = 4;
 
 function TablaLibros() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [librosData, setLibrosData] = useState([]);
+  const [error, setError] = useState(null);
+  
   const filteredBooks = librosData.filter(libro =>
-    libro.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    libro.autor.toLowerCase().includes(searchTerm.toLowerCase())
+    libro.Titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    libro.Autor.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const token = localStorage.getItem("access_token"); // O cualquier otro método para obtener el token
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axiosInstance.get('/books/books', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        console.log(response.data);
+        setLibrosData(response.data);
+      } catch (error) {
+        console.error("Error al obtener los libros:", error.response ? error.response.data : error.message);
+        setError(error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
 
   const indexOfLastBook = currentPage * itemsPerPage;
   const indexOfFirstBook = indexOfLastBook - itemsPerPage;
@@ -51,6 +66,7 @@ function TablaLibros() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
+      {error && <div className="text-red-500 mb-4">{error}</div>}
       <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden shadow-lg">
         <thead className="bg-blue-600 text-white">
           <tr>
@@ -65,17 +81,17 @@ function TablaLibros() {
         </thead>
         <tbody className="text-gray-700">
           {currentBooks.map(libro => (
-            <tr key={libro.id} className="hover:bg-gray-100 transition-colors duration-200">
-              <td className="py-2 px-4 border-b text-center">{libro.id}</td>
-              <td className="py-2 px-4 border-b">{libro.titulo}</td>
-              <td className="py-2 px-4 border-b">{libro.autor}</td>
-              <td className="py-2 px-4 border-b text-center">{libro.stockTotal}</td>
-              <td className="py-2 px-4 border-b text-center">{libro.prestados}</td>
-              <td className="py-2 px-4 border-b text-center">{libro.stockTotal - libro.prestados}</td>
+            <tr key={libro.ID} className="hover:bg-gray-100 transition-colors duration-200">
+              <td className="py-2 px-4 border-b text-center">{libro.ID}</td>
+              <td className="py-2 px-4 border-b">{libro.Titulo}</td>
+              <td className="py-2 px-4 border-b">{libro.Autor}</td>
+              <td className="py-2 px-4 border-b text-center">{libro.cantidad_total}</td>
+              <td className="py-2 px-4 border-b text-center">{libro.cantidad_total - libro.cantidad_disponible}</td>
+              <td className="py-2 px-4 border-b text-center">{libro.cantidad_disponible}</td>
               <td className="py-2 px-4 border-b text-center">
-                <button onClick={() => handleViewDetails(libro.id)} className="text-blue-500 hover:underline mr-2">Ver</button>
-                <button onClick={() => handleEdit(libro.id)} className="text-yellow-500 hover:underline mr-2">Editar</button>
-                <button onClick={() => handleDelete(libro.id)} className="text-red-500 hover:underline">Eliminar</button>
+                <button onClick={() => handleViewDetails(libro.ID)} className="text-blue-500 hover:underline mr-2">Ver</button>
+                <button onClick={() => handleEdit(libro.ID)} className="text-yellow-500 hover:underline mr-2">Editar</button>
+                <button onClick={() => handleDelete(libro.ID)} className="text-red-500 hover:underline">Eliminar</button>
               </td>
             </tr>
           ))}
