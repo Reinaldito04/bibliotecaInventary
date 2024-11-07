@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "../utils/axiosinstace";
+import Link from "next/link";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -74,7 +75,7 @@ function Login() {
           Login
         </button>
         <p className="text-sm text-gray-500">
-          Don't have an account? <a className="text-blue-500">Register</a>
+          Don't have an account? <Link href={"/register"} className="text-blue-500">Register</Link>
         </p>
       </section>
     </div>

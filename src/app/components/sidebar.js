@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 import { FaHome, FaUser, FaCog, FaChartBar, FaBell, FaChevronLeft, FaChevronRight, FaBook } from "react-icons/fa";
 import Link from "next/link";
 
@@ -9,30 +9,36 @@ export default function Layout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
+  const isTokenExpired = () => {
     const token = localStorage.getItem("access_token");
+    if (!token) return true;
 
-    if (!token) {
-      // Si no existe el token, redirige al login
-      router.push("/");
-    } else {
-      try {
-        // Decodifica el token para obtener la fecha de expiración
-        const decodedToken = jwtDecode(token); // Usar la función directamente sin necesidad de un `default`
-        const expirationTime = decodedToken.exp * 1000; // Convierte la expiración a milisegundos
-        const currentTime = Date.now();
-
-        if (currentTime >= expirationTime) {
-          // Si el token ha expirado, redirige al login
-          localStorage.removeItem("access_token"); // Elimina el token caducado
-          router.push("/"); // Redirige al login
-        }
-      } catch (error) {
-        console.error("Error decodificando el token:", error);
-        localStorage.removeItem("access_token");
-        router.push("/"); // Redirige al login si hay un error en la decodificación
-      }
+    try {
+      const decodedToken = jwtDecode(token);
+      const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
+      return Date.now() > expirationTime;
+    } catch (error) {
+      console.error("Error decoding token:", error);
+      return true; // If there's an error decoding, consider token as expired
     }
+  };
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      if (isTokenExpired()) {
+        localStorage.removeItem("access_token"); // Remove expired token
+        router.push("/"); // Redirect to login
+      }
+    };
+
+    // Initial check when component mounts
+    checkTokenExpiration();
+
+    // Set interval to check expiration every minute
+    const interval = setInterval(checkTokenExpiration, 60000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, [router]);
 
   return (
@@ -58,10 +64,10 @@ export default function Layout({ children }) {
             <FaBook className="text-lg" />
             <span className={`${sidebarOpen ? 'block' : 'hidden'}`}>Libros</span>
           </Link>
-          <a href="#" className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all">
+          <Link href="/dashboard/config" className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all">
             <FaCog className="text-lg" />
             <span className={`${sidebarOpen ? 'block' : 'hidden'}`}>Settings</span>
-          </a>
+          </Link>
           <a href="#" className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all">
             <FaChartBar className="text-lg" />
             <span className={`${sidebarOpen ? 'block' : 'hidden'}`}>Reports</span>

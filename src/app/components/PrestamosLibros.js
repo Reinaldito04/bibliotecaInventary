@@ -26,12 +26,7 @@ function PrestamosLibros() {
     });
   };
 
-  const handleDevolucion = (index) => {
-    const nuevosPrestamos = [...prestamos];
-    nuevosPrestamos.splice(index, 1);
-    setPrestamos(nuevosPrestamos);
-  };
-
+ 
   return (
     <div className="p-6">
       <h2 className="text-lg font-semibold mb-4">Registrar Préstamo de Libro</h2>
@@ -89,40 +84,7 @@ function PrestamosLibros() {
         </button>
       </form>
 
-      <h2 className="text-lg font-semibold mb-4">Préstamos Actuales</h2>
-      {prestamos.length > 0 ? (
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border-b">Libro</th>
-              <th className="px-4 py-2 border-b">Usuario</th>
-              <th className="px-4 py-2 border-b">Fecha de Préstamo</th>
-              <th className="px-4 py-2 border-b">Fecha de Devolución</th>
-              <th className="px-4 py-2 border-b">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {prestamos.map((prestamo, index) => (
-              <tr key={index}>
-                <td className="px-4 py-2 border-b">{prestamo.libro}</td>
-                <td className="px-4 py-2 border-b">{prestamo.usuario}</td>
-                <td className="px-4 py-2 border-b">{prestamo.fechaPrestamo}</td>
-                <td className="px-4 py-2 border-b">{prestamo.fechaDevolucion}</td>
-                <td className="px-4 py-2 border-b">
-                  <button
-                    onClick={() => handleDevolucion(index)}
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition"
-                  >
-                    Devolver
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-gray-700">No hay préstamos registrados.</p>
-      )}
+     
     </div>
   );
 }
