@@ -5,14 +5,19 @@ import { getToken } from "@/app/utils/Token";
 
 function RegistrarPrestamo() {
   const [userData, setUserData] = useState([]);
+  const [bookData, setBookData] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
+
   const [formData, setFormData] = useState({
     nombreUsuario: "",
+    idLibro: "",
     tituloLibro: "",
     fechaPrestamo: "",
     fechaDevolucion: "",
   });
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showBookDropdown, setShowBookDropdown] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -29,8 +34,21 @@ function RegistrarPrestamo() {
       }
     };
     fetchUsers();
+    fetchBooks();
   }, []);
-
+  const fetchBooks = async () => {
+    try {
+      const response = await axiosInstance.get("/books/books", {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      setBookData(response.data);
+      setFilteredBooks(response.data);
+    } catch (error) {
+      console.error("Error al obtener los libros:", error);
+    }
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -44,118 +62,180 @@ function RegistrarPrestamo() {
           user.Username.toLowerCase().includes(value.toLowerCase())
         );
         setFilteredUsers(filtered);
-        setShowDropdown(true);
+        setShowUserDropdown(true);
       } else {
-        setShowDropdown(false);
+        setShowUserDropdown(false);
+      }
+    }
+
+    if (name === "tituloLibro") {
+      if (value) {
+        const filtered = bookData.filter((book) =>
+          book.Titulo.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredBooks(filtered);
+        setShowBookDropdown(true);
+      } else {
+        setShowBookDropdown(false);
       }
     }
   };
 
   const handleUserSelect = (username) => {
     setFormData({ ...formData, nombreUsuario: username });
-    setShowDropdown(false);
+    setShowUserDropdown(false);
+  };
+
+  const handleBookSelect = (book) => {
+    setFormData({ ...formData, idLibro: book.ID, tituloLibro: book.Titulo });
+    setShowBookDropdown(false);
   };
 
   const handleBlur = () => {
-    // Cierra el dropdown después de un pequeño retraso para permitir seleccionar elementos
     setTimeout(() => {
-      setShowDropdown(false);
+      setShowUserDropdown(false);
+      setShowBookDropdown(false);
     }, 150);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Datos del préstamo:", formData);
-    alert("Préstamo registrado con éxito");
-    setFormData({
-      nombreUsuario: "",
-      tituloLibro: "",
-      fechaPrestamo: "",
-      fechaDevolucion: "",
-    });
+  
+    try {
+      // Esperar la respuesta de la API
+      const response = await axiosInstance.post(
+        "/leans/agg",
+        {
+          Username: formData.nombreUsuario,
+          IDBook: formData.idLibro,
+          DateStart: formData.fechaPrestamo,
+          DateEnd: formData.fechaDevolucion,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        }
+      );
+  
+      // Comprobar si la respuesta tiene el código de éxito (200)
+      if (response.status === 200) {
+        alert("Préstamo registrado con éxito");
+      } else {
+        alert("Error al registrar el préstamo: " + response.data.error);
+      }
+    } catch (error) {
+      // Manejar error si no se pudo realizar la solicitud
+      if (error.response) {
+        // El servidor respondió con un código de error (ej. 400, 500)
+        alert("Error al registrar el préstamo: " + error.response.data.error);
+      } else {
+        // Error de red o error en la solicitud
+        alert("Error al registrar el préstamo: " + error.message);
+      }
+    } finally {
+      // Limpiar los campos del formulario después de la solicitud
+      setFormData({
+        nombreUsuario: "",
+        idLibro: "",
+        tituloLibro: "",
+        fechaPrestamo: "",
+        fechaDevolucion: "",
+      });
+      // Rehacer la solicitud para obtener los libros después de registrar el préstamo
+      fetchBooks();
+    }
   };
+  
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-lg w-4/6 mx-auto">
       <form onSubmit={handleSubmit}>
         <div className="mb-4 relative">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="nombreUsuario">
+          <label className="block text-gray-700 font-medium mb-2">
             Nombre del Usuario
           </label>
           <input
             type="text"
-            id="nombreUsuario"
             name="nombreUsuario"
             value={formData.nombreUsuario}
             onChange={handleChange}
             onBlur={handleBlur}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Escribe para buscar un usuario..."
-            required
+            className="w-full border border-gray-300 p-2 rounded"
+            placeholder="Buscar usuario"
           />
-          {showDropdown && filteredUsers.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded shadow-md mt-1 max-h-40 overflow-y-auto">
-              {filteredUsers.map((user, index) => (
+          {showUserDropdown && (
+            <ul className="absolute bg-white border z-50 border-gray-300 w-full mt-1 max-h-40 overflow-y-auto">
+              {filteredUsers.map((user) => (
                 <li
-                  key={index}
-                  className="p-2 cursor-pointer hover:bg-blue-100"
-                  onMouseDown={() => handleUserSelect(user.Username)} // onMouseDown para evitar que el blur lo cierre prematuramente
+                  key={user.Username}
+                  onClick={() => handleUserSelect(user.Username)}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
                 >
-                  {user.Username} ({user.Email})
+                  {user.Username} - {user.Email}
                 </li>
               ))}
             </ul>
           )}
         </div>
-        {/* Otros campos del formulario */}
-        <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2" htmlFor="tituloLibro">
+
+        <div className="mb-4 relative">
+          <label className="block text-gray-700 font-medium mb-2">
             Título del Libro
           </label>
           <input
             type="text"
-            id="tituloLibro"
             name="tituloLibro"
             value={formData.tituloLibro}
             onChange={handleChange}
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            onBlur={handleBlur}
+            className="w-full border border-gray-300 p-2 rounded"
+            placeholder="Buscar libro"
+          />
+          {showBookDropdown && (
+            <ul className="absolute bg-white z-50 border border-gray-300 w-full mt-1 max-h-40 overflow-y-auto">
+              {filteredBooks.map((book) => (
+                <li
+                  key={book.ID}
+                  onClick={() => handleBookSelect(book)}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {book.Titulo} - {book.Autor} - Disponible :{" "}
+                  {book.cantidad_disponible}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Fecha de Préstamo
+          </label>
+          <input
+            type="date"
+            name="fechaPrestamo"
+            value={formData.fechaPrestamo}
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-2 rounded"
           />
         </div>
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="fechaPrestamo">
-              Fecha de Préstamo
-            </label>
-            <input
-              type="date"
-              id="fechaPrestamo"
-              name="fechaPrestamo"
-              value={formData.fechaPrestamo}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-medium mb-2" htmlFor="fechaDevolucion">
-              Fecha de Devolución
-            </label>
-            <input
-              type="date"
-              id="fechaDevolucion"
-              name="fechaDevolucion"
-              value={formData.fechaDevolucion}
-              onChange={handleChange}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-2">
+            Fecha de Devolución
+          </label>
+          <input
+            type="date"
+            name="fechaDevolucion"
+            value={formData.fechaDevolucion}
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-2 rounded"
+          />
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
-        >
+
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
           Registrar Préstamo
         </button>
       </form>
