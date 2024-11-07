@@ -1,5 +1,6 @@
 import Layout from "@/app/components/sidebar";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import TablaView from "./TablaView";
 function page() {
   return (
     <Layout>
@@ -13,6 +14,7 @@ function page() {
           Bienvenido a la sección de ver préstamos. Selecciona una préstamo para
           ver detalles.
         </p>
+        <TablaView />
       </div>
     </Layout>
   );
