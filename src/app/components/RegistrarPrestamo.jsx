@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "@/app/utils/axiosinstace";
 import { getToken } from "@/app/utils/Token";
+import InputUser from "./InputUser";
+import InputBook from "./InputLibros";
 
 function RegistrarPrestamo() {
-  const [userData, setUserData] = useState([]);
   const [bookData, setBookData] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([]);
 
   const [formData, setFormData] = useState({
     nombreUsuario: "",
@@ -16,24 +15,10 @@ function RegistrarPrestamo() {
     fechaPrestamo: "",
     fechaDevolucion: "",
   });
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
-  const [showBookDropdown, setShowBookDropdown] = useState(false);
+
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axiosInstance.get("/auth/getUsers", {
-          headers: {
-            Authorization: `Bearer ${getToken()}`,
-          },
-        });
-        setUserData(response.data);
-        setFilteredUsers(response.data);
-      } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-      }
-    };
-    fetchUsers();
+   
     fetchBooks();
   }, []);
   const fetchBooks = async () => {
@@ -44,7 +29,6 @@ function RegistrarPrestamo() {
         },
       });
       setBookData(response.data);
-      setFilteredBooks(response.data);
     } catch (error) {
       console.error("Error al obtener los libros:", error);
     }
@@ -81,22 +65,6 @@ function RegistrarPrestamo() {
     }
   };
 
-  const handleUserSelect = (username) => {
-    setFormData({ ...formData, nombreUsuario: username });
-    setShowUserDropdown(false);
-  };
-
-  const handleBookSelect = (book) => {
-    setFormData({ ...formData, idLibro: book.ID, tituloLibro: book.Titulo });
-    setShowBookDropdown(false);
-  };
-
-  const handleBlur = () => {
-    setTimeout(() => {
-      setShowUserDropdown(false);
-      setShowBookDropdown(false);
-    }, 150);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -153,60 +121,12 @@ function RegistrarPrestamo() {
     <div className="p-4 bg-white rounded-lg shadow-lg w-4/6 mx-auto">
       <form onSubmit={handleSubmit}>
         <div className="mb-4 relative">
-          <label className="block text-gray-700 font-medium mb-2">
-            Nombre del Usuario
-          </label>
-          <input
-            type="text"
-            name="nombreUsuario"
-            value={formData.nombreUsuario}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className="w-full border border-gray-300 p-2 rounded"
-            placeholder="Buscar usuario"
-          />
-          {showUserDropdown && (
-            <ul className="absolute bg-white border z-50 border-gray-300 w-full mt-1 max-h-40 overflow-y-auto">
-              {filteredUsers.map((user) => (
-                <li
-                  key={user.Username}
-                  onClick={() => handleUserSelect(user.Username)}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  {user.Username} - {user.Email}
-                </li>
-              ))}
-            </ul>
-          )}
+        <InputUser formData={formData} setFormData={setFormData} />
+
         </div>
 
         <div className="mb-4 relative">
-          <label className="block text-gray-700 font-medium mb-2">
-            Título del Libro
-          </label>
-          <input
-            type="text"
-            name="tituloLibro"
-            value={formData.tituloLibro}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className="w-full border border-gray-300 p-2 rounded"
-            placeholder="Buscar libro"
-          />
-          {showBookDropdown && (
-            <ul className="absolute bg-white z-50 border border-gray-300 w-full mt-1 max-h-40 overflow-y-auto">
-              {filteredBooks.map((book) => (
-                <li
-                  key={book.ID}
-                  onClick={() => handleBookSelect(book)}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  {book.Titulo} - {book.Autor} - Disponible :{" "}
-                  {book.cantidad_disponible}
-                </li>
-              ))}
-            </ul>
-          )}
+         <InputBook formData={formData} setFormData={setFormData} bookData={bookData}/>
         </div>
 
         <div className="mb-4">

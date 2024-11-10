@@ -7,10 +7,9 @@ function Page() {
   const Sections = [
     { id: 1, title: "Inventarios", description: "Un inventario de libros",page:"inventary" },
     { id: 2, title: "Préstamos", description: "Préstamos de libros por los usuarios",page:"loans" },
-    { id: 3, title: "Devoluciones", description: "Manejo de devoluciones de libros" },
-    { id: 4, title: "Reservas", description: "Reservas de libros por los usuarios" },
-    { id: 5, title: "Historial de Préstamos", description: "Registro de todos los préstamos" },
-    { id: 6, title: "Multas", description: "Registro de multas por los usuarios" },
+    { id: 3, title: "Reservas", description: "Reservas de libros por los usuarios" },
+    { id: 4, title: "Historial de Préstamos", description: "Registro de todos los préstamos",page:"history" },
+    { id: 5, title: "Multas", description: "Registro de multas por los usuarios" ,page:"fines" },
 
  
   ];

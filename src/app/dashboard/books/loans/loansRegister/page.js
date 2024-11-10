@@ -1,6 +1,6 @@
 import Layout from "@/app/components/sidebar";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import RegistrarPrestamo from "./RegistrarPrestamo";
+import RegistrarPrestamo from "../../../../components/RegistrarPrestamo";
 export default function page() {
   return (
     <Layout>

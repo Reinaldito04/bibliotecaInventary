@@ -15,9 +15,7 @@ function TablaView() {
     (libro) =>
       libro.Titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       libro.Autor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      libro.Username.toLowerCase().includes(searchTerm.toLowerCase()) 
-
-
+      libro.Username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
@@ -29,7 +27,11 @@ function TablaView() {
       const response = await axiosInstance.get("/leans/", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      setLibrosData(response.data);
+     const filtrosLibros = response.data.filter(
+      (libros) => !libros.DateReal || libros.DateReal ==='No entregado aún'
+     );
+      
+      setLibrosData(filtrosLibros);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
@@ -107,40 +109,40 @@ function TablaView() {
           </thead>
           <tbody className="text-gray-700">
             {currentBooks.map((libro) => (
-              <tr
-                key={libro.LeanID}
-                className="hover:bg-gray-100 transition-colors duration-200"
-              >
-                <td className="py-2 px-4 border-b text-center">
-                  {libro.LeanID}
-                </td>
-                <td className="py-2 px-4 border-b">{libro.Titulo}</td>
-                <td className="py-2 px-4 border-b">{libro.Autor}</td>
-                <td className="py-2 px-4 border-b">{libro.DateStart}</td>
-                <td className="py-2 px-4 border-b">{libro.DateEnd}</td>
-                <td className="py-2 px-4 border-b">{libro.Username}</td>
-                <td className="py-2 px-4 border-b">{libro.DateReal}</td>
-                {libro.DateReal === "No entregado aún" ? (
-                  <td className="py-2 px-4 border-b">
-                    <button
-                      onClick={() => handleEntregaClick(libro)}
-                      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-                    >
-                      Marcar como entregado
-                    </button>
+                <tr
+                  key={libro.LeanID}
+                  className="hover:bg-gray-100 transition-colors duration-200"
+                >
+                  <td className="py-2 px-4 border-b text-center">
+                    {libro.LeanID}
                   </td>
-                ) : (
-                  <td className="py-2 px-4 border-b">
-                    <button
-                      disabled
-                      className="bg-green-400 text-white px-4 py-2 rounded-lg "
-                    >
-                      Ya fue entregado
-                    </button>
-                  </td>
-                )}
-              </tr>
-            ))}
+                  <td className="py-2 px-4 border-b">{libro.Titulo}</td>
+                  <td className="py-2 px-4 border-b">{libro.Autor}</td>
+                  <td className="py-2 px-4 border-b">{libro.DateStart}</td>
+                  <td className="py-2 px-4 border-b">{libro.DateEnd}</td>
+                  <td className="py-2 px-4 border-b">{libro.Username}</td>
+                  <td className="py-2 px-4 border-b">{libro.DateReal}</td>
+                  {libro.DateReal === "No entregado aún" ? (
+                    <td className="py-2 px-4 border-b">
+                      <button
+                        onClick={() => handleEntregaClick(libro)}
+                        className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+                      >
+                        Marcar como entregado
+                      </button>
+                    </td>
+                  ) : (
+                    <td className="py-2 px-4 border-b">
+                      <button
+                        disabled
+                        className="bg-green-400 text-white px-4 py-2 rounded-lg"
+                      >
+                        Ya fue entregado
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
           </tbody>
         </table>
 
