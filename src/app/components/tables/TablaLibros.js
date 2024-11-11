@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { axiosInstance } from "../utils/axiosinstace";
+import { axiosInstance } from "../../utils/axiosinstace";
 
 const itemsPerPage = 4;
 

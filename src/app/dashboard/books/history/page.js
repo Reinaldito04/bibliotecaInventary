@@ -3,7 +3,7 @@ import Layout from "@/app/components/sidebar";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import PrestamosLibros from "@/app/components/PrestamosLibros";
 import Link from "next/link";
-import TableHistory from "../../../components/TableHistory";
+import TableHistory from "@/app/components/tables/TableHistory";
 function Page() {
   
 

@@ -26,6 +26,7 @@ function Login() {
 
       // Almacenar el token en el localStorage
       localStorage.setItem("access_token", response.data.access_token);
+      localStorage.setItem("username", username);
 
       // Almacenar el rol en el localStorage
       localStorage.setItem("role", response.data.Role);

@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "@/app/utils/axiosinstace";
 import { getToken } from "@/app/utils/Token";
-import InputUser from "./InputUser";
-import InputBook from "./InputLibros";
+import InputUser from "./inputs/InputUser";
+import InputBook from "./inputs/InputLibros";
 
 function RegistrarPrestamo() {
   const [bookData, setBookData] = useState([]);

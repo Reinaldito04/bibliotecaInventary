@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import InputUser from './InputUser';
-import InputBook from './InputLibros';
+import InputUser from './inputs/InputUser';
+import InputBook from './inputs/InputLibros';
 import { getToken } from '../utils/Token';
 import { axiosInstance } from '../utils/axiosinstace';
 

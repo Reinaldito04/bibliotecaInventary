@@ -1,6 +1,6 @@
 import Layout from "@/app/components/sidebar";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import TablaView from "../../../../components/TablaView";
+import TablaView from "@/app/components/tables/TablaView";
 function page() {
   return (
     <Layout>

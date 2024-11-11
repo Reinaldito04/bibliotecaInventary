@@ -1,6 +1,6 @@
 import Layout from "@/app/components/sidebar";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import TablaLibros from "@/app/components/TablaLibros";
+import TablaLibros from "@/app/components/tables/TablaLibros";
 import AgregarLibro from "@/app/components/AgregarLibro";
 function page() {
   return (

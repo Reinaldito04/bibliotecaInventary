@@ -16,7 +16,12 @@ export default function Layout({ children }) {
     try {
       const decodedToken = jwtDecode(token);
       const expirationTime = decodedToken.exp * 1000; // Convert to milliseconds
-      return Date.now() > expirationTime;
+      const isExpired = Date.now() > expirationTime;
+      // Verifica si el rol del usuario es 'admin'
+      const userRole = decodedToken.Role; // Asegúrate de que el token tenga esta estructura
+      const isAdmin = userRole === 'Admin';
+      return isExpired || !isAdmin;
+
     } catch (error) {
       console.error("Error decoding token:", error);
       return true; // If there's an error decoding, consider token as expired

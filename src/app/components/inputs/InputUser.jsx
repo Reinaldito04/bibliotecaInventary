@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { axiosInstance } from "@/app/utils/axiosinstace";
-import { getToken } from "../utils/Token";
+import { getToken } from "../../utils/Token";
 
 function InputUser({ formData, setFormData }) {
   const [userData, setUserData] = useState([]);
