@@ -2,7 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "@/app/utils/axiosinstace";
 import { getToken } from "@/app/utils/Token";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 function TableReservas() {
+  
   const itemsPerPage = 4;
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,7 +22,7 @@ function TableReservas() {
   useEffect(() => {
     fetchBooks();
   }, []);
-
+  const mySwal  = withReactContent(Swal);
   const fetchBooks = async () => {
     try {
       const response = await axiosInstance.get("/reserves/get", {
@@ -48,6 +51,46 @@ function TableReservas() {
 
   // Cambio de página
   const handlePageChange = (page) => setCurrentPage(page);
+
+  const handleSubmit = async (book)=>{
+    if (book.Estado === "Entregado") {
+      mySwal.fire({
+        title: 'Error',
+        text: 'El libro ya ha sido entregado',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+      });
+      return;
+    }
+    mySwal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas cambiar el estado de la reserva a entregado?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, estoy seguro',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+
+      cancelButtonText: 'Cancelar',
+
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+        const response = await axiosInstance.put(`/reserves/update/${book.ID}`, {
+          Estado: 'Entregado'
+        }, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
+        mySwal.fire("Reservado!", "El estado ha sido cambiado a entregado.", "success");  
+        fetchBooks();
+      } catch (error) {
+        setError(error.response ? error.response.data : error.message);
+        }
+      }
+      }
+    )
+  }
 
   return (
     <>
@@ -95,6 +138,7 @@ function TableReservas() {
                     <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px
                     -4 rounded"
+                    onClick={() => handleSubmit(libro)}
                     >
                         Cambiar Estado
                     </button>
