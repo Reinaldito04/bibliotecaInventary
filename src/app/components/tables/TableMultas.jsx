@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "@/app/utils/axiosinstace";
 import { getToken } from "@/app/utils/Token";
+
 function TableMultas() {
   const itemsPerPage = 4;
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,9 +12,9 @@ function TableMultas() {
 
   const filteredBooks = librosData.filter(
     (libro) =>
-      libro.Titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      libro.Autor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      libro.Username.toLowerCase().includes(searchTerm.toLowerCase())
+      libro.Titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      libro.Autor?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      libro.Username?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
@@ -22,15 +23,18 @@ function TableMultas() {
 
   const fetchBooks = async () => {
     try {
-      const response = await axiosInstance.get("/fines/getFines", {
-        headers: { Authorization: `Bearer ${getToken()}` },
-      });
+      const response = await axiosInstance.get(
+        `/fines/getFines/${localStorage.getItem("username")}`,
+        {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        }
+      );
       setLibrosData(response.data);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
+      setLibrosData([]);
     }
   };
- 
 
   // Paginación
   const indexOfLastBook = currentPage * itemsPerPage;
@@ -46,7 +50,7 @@ function TableMultas() {
       <div className="overflow-x-auto p-6 bg-gray-50 rounded-lg shadow-md">
         <input
           type="text"
-          placeholder="Buscar por título ,autor o usuario"
+          placeholder="Buscar por título, autor o usuario"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mb-4 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -55,40 +59,54 @@ function TableMultas() {
 
         {/* Tabla */}
         <table className="min-w-full bg-white border border-gray-300 rounded-lg overflow-hidden shadow-lg">
-          <thead className="bg-blue-600 text-white">
+          <thead className="bg-white-600 text-black">
             <tr>
-              <th className="py-3 px-4 border-b">ID Multa</th>
               <th className="py-3 px-4 border-b">Título</th>
               <th className="py-3 px-4 border-b">Autor</th>
               <th className="py-3 px-4 border-b">Fecha de préstamo</th>
               <th className="py-3 px-4 border-b">Fecha de devolución</th>
               <th className="py-3 px-4 border-b">Usuario</th>
               <th className="py-3 px-4 border-b">Monto de Multa</th>
-              <th className="py-3 px-4 border-b">Dias de Retraso</th>
+              <th className="py-3 px-4 border-b">Días de Retraso</th>
               <th className="py-3 px-4 border-b">Estado</th>
             </tr>
           </thead>
-          <tbody className="text-gray-700">
-            {currentBooks.map((libro) => (
-              <tr
-                key={libro.ID}
-                className="hover:bg-gray-100 transition-colors duration-200"
-              >
-                <td className="py-2 px-4 border-b text-center">
-                  {libro.ID}
-                </td>
-                
-                <td className="py-2 px-4 border-b">{libro.Titulo}</td>
-                <td className="py-2 px-4 border-b">{libro.Autor}</td>
-                <td className="py-2 px-4 border-b">{libro.DateStart}</td>
-                <td className="py-2 px-4 border-b">{libro.DateEnd}</td>
-                <td className="py-2 px-4 border-b">{libro.Username}</td>
-                <td className="py-2 px-4 border-b">{libro.MontoMulta}</td>
-                <td className="py-2 px-4 border-b">{libro.DiasRetraso}</td>
-                <td className="py-2 px-4 border-b">{libro.Estado}</td>
-              </tr>
-            ))}
-          </tbody>
+            <tbody className="text-gray-700">
+              {currentBooks.length === 0 ? (
+                <tr>
+                  <td colSpan="9" className="py-2 px-4 border-b text-center">
+                    No se encontraron registros.
+                  </td>
+                </tr>
+              ) : (
+                currentBooks.map((libro) => (
+                  <tr
+                    key={libro.ID}
+                    className="hover:bg-gray-100 transition-colors duration-200"
+                  >
+                   
+                    <td className="py-2 px-4 border-b">{libro.Titulo ?? ""}</td>
+                    <td className="py-2 px-4 border-b">{libro.Autor ?? ""}</td>
+                    <td className="py-2 px-4 border-b">
+                      {libro.DateStart ?? ""}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {libro.DateEnd ?? ""}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {libro.Username ?? ""}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {libro.MontoMulta ?? ""}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {libro.DiasRetraso ?? ""}
+                    </td>
+                    <td className="py-2 px-4 border-b">{libro.Estado ?? ""}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
         </table>
 
         {/* Paginación */}
@@ -118,7 +136,6 @@ function TableMultas() {
           </button>
         </div>
       </div>
-
     </>
   );
 }
