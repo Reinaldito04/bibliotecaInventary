@@ -68,7 +68,7 @@ export default function Layout({ children }) {
               sidebarOpen ? "opacity-100" : "opacity-0 hidden"
             }`}
           >
-            Dashboard
+            Biblioteca
           </h2>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -104,15 +104,7 @@ export default function Layout({ children }) {
               Settings
             </span>
           </Link>
-          <a
-            href="#"
-            className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all"
-          >
-            <FaChartBar className="text-lg" />
-            <span className={`${sidebarOpen ? "block" : "hidden"}`}>
-              Reports
-            </span>
-          </a>
+         
 
           {/* Logout button at the bottom */}
           <div className="mt-auto ">
@@ -137,16 +129,8 @@ export default function Layout({ children }) {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow p-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold">Dashboard</h1>
-          <div className="flex items-center space-x-4">
-            <button className="relative text-gray-600 hover:text-gray-900">
-              <FaBell className="text-xl" />
-              <span className="absolute top-0 right-0 inline-block w-2.5 h-2.5 bg-red-500 rounded-full"></span>
-            </button>
-            <button className="text-gray-600 hover:text-gray-900">
-              Profile
-            </button>
-          </div>
+          <h1 className="text-xl font-semibold">Biblioteca</h1>
+         
         </header>
 
         {/* Page Content */}

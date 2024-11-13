@@ -1,16 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { axiosInstance } from "../../utils/axiosinstace";
-
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 const itemsPerPage = 4;
 
 function TablaLibros() {
+
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [librosData, setLibrosData] = useState([]);
   const [error, setError] = useState(null);
   const [modalState, setModalState] = useState({ isOpen: false, isView: false, book: null });
   const token = localStorage.getItem("access_token");
+
+  const MySwal = withReactContent(Swal);
 
   // Filtrar libros por título o autor
   const filteredBooks = librosData.filter(
@@ -55,8 +59,30 @@ function TablaLibros() {
   };
 
   const handleDelete = (id) => {
-    console.log(`Eliminando el libro con ID: ${id}`);
-    // Añadir lógica para eliminar
+    MySwal.fire({
+      title: "¿Estas seguro de eliminar el libro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axiosInstance.delete(`/books/delete/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          MySwal.fire("Eliminado!", "El libro ha sido eliminado.", "success");
+          const response = await axiosInstance.get("/books/books", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setLibrosData(response.data);
+        } catch (error) {
+          console.error("Error al eliminar el libro:", error);
+        }
+      }
+    });
   };
 
   const handleModalClose = () => setModalState({ isOpen: false, isView: false, book: null });
