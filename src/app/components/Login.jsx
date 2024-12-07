@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "../utils/axiosinstace";
@@ -12,31 +12,25 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      // Usar URLSearchParams para formatear los datos como 'application/x-www-form-urlencoded'
       const params = new URLSearchParams();
       params.append("username", username);
       params.append("password", password);
 
-      // Agregar Content-Type para asegurar que se enviará en formato x-www-form-urlencoded
       const response = await axiosInstance.post("/auth/token", params, {
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
       });
 
-      // Almacenar el token en el localStorage
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("username", username);
-
-      // Almacenar el rol en el localStorage
       localStorage.setItem("role", response.data.Role);
 
-      // Redirigir a la página correspondiente basándote en el rol o alguna otra lógica
-      const userRole = response.data.Role; // Asegúrate de que el backend envíe este valor
+      const userRole = response.data.Role;
       if (userRole === "Admin") {
-        router.push("/dashboard"); // Redirige al dashboard de administrador
+        router.push("/dashboard");
       } else {
-        router.push("/home"); // Redirige al dashboard de usuario
+        router.push("/home");
       }
     } catch (error) {
       setErrorMessage("Incorrect username or password");
@@ -44,41 +38,68 @@ function Login() {
   };
 
   return (
-    <div className="w-full max-w-lg p-5 flex flex-col items-center justify-center text-center font-mono text-sm">
-      <h1 className="text-4xl font-bold text-gray-400 mb-6">
-        Login to
-        <span className="text-blue-500 ml-2">Biblioteca</span>
-      </h1>
+    <div className=" flex items-center justify-center bg-gray-50 rounded-lg">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 flex flex-col items-center">
+        {/* Logo */}
+        <div className="mb-6">
+          <img
+            src="/logo.png"
+            alt="Logo Biblioteca"
+            className="w-20 h-20 object-contain"
+          />
+        </div>
 
-      {errorMessage && (
-        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
-      )}
-
-      <section className="w-full mt-4 flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="Username"
-          className="w-full h-10 rounded-md border text-black border-gray-300 px-4"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full h-10 rounded-md border text-black border-gray-300 px-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button
-          className="w-full h-10 rounded-md text-sm text-pretty bg-blue-500 text-white"
-          onClick={handleLogin}
-        >
-          Login
-        </button>
-        <p className="text-sm text-gray-500">
-          Don't have an account? <Link href={"/register"} className="text-blue-500">Register</Link>
+        {/* Título */}
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
+          Bienvenido a <span className="text-blue-500">Biblioteca</span>
+        </h1>
+        <p className="text-sm text-gray-600 mb-6">
+          Ingresa tus credenciales para acceder a tu cuenta.
         </p>
-      </section>
+
+        {/* Mensaje de error */}
+        {errorMessage && (
+          <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+        )}
+
+        {/* Formulario */}
+        <section className="w-full">
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full h-12 rounded-md border border-gray-400 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <input
+              type="password"
+              placeholder="Password"
+              className="w-full h-12 rounded-md border border-gray-400 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-center w-full">
+            <button
+              className="w-[80%] h-12 rounded-md text-sm font-semibold bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+              onClick={handleLogin}
+            >
+              Login
+            </button>
+          </div>
+        </section>
+
+        {/* Enlace a registro */}
+        <p className="text-sm text-gray-600 mt-4">
+          ¿No tienes una cuenta?{" "}
+          <Link href={"/register"} className="text-blue-500 font-semibold">
+            Regístrate aquí
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

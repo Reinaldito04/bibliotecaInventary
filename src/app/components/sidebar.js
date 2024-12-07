@@ -104,22 +104,20 @@ export default function Layout({ children }) {
               Settings
             </span>
           </Link>
-         
 
           {/* Logout button at the bottom */}
           <div className="mt-auto ">
             <button
-            className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all"
-            onClick={() => {
+              className="flex items-center gap-4 p-2 hover:bg-blue-700 rounded transition-all"
+              onClick={() => {
                 localStorage.removeItem("access_token");
                 window.location.href = "/";
               }}
             >
-              <CiLogout className="text-lg" size={30}>
-              </CiLogout>
+              <CiLogout className="text-lg" size={30}></CiLogout>
               <span className={`${sidebarOpen ? "block" : "hidden"}`}>
-              Logout
-            </span>
+                Logout
+              </span>
             </button>
           </div>
         </nav>
@@ -129,8 +127,10 @@ export default function Layout({ children }) {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <header className="bg-white shadow p-4 flex items-center justify-between">
-          <h1 className="text-xl font-semibold">Biblioteca</h1>
-         
+          <div className="flex items-center gap-4">
+            <img src="/logo.png" alt="Logo" className="h-10" />
+            <h1 className="text-xl font-semibold">Biblioteca</h1>
+          </div>
         </header>
 
         {/* Page Content */}
