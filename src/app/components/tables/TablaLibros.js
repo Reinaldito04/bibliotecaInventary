@@ -134,7 +134,7 @@ function TablaLibros() {
             <th className="py-3 px-4 border-b">ID</th>
             <th className="py-3 px-4 border-b">Título</th>
             <th className="py-3 px-4 border-b">Autor</th>
-            <th className="py-3 px-4 border-b">Stock Total</th>
+            <th className="py-3 px-4 border-b">Ejemplares</th>
             <th className="py-3 px-4 border-b">Prestados</th>
             <th className="py-3 px-4 border-b">Disponibles</th>
             <th className="py-3 px-4 border-b">Acciones</th>
@@ -186,7 +186,7 @@ function TablaLibros() {
             <p className="text-gray-600 text-lg mb-4">Autor: <span className="font-semibold text-gray-700">{modalState.book.Autor}</span></p>
             <p className="text-gray-600 text-lg mb-4">Género: <span className="font-semibold text-gray-700">{modalState.book.genero}</span></p>
             <p className="text-gray-600 mb-4">Descripcion : {modalState.book.Descripcion}</p>
-            <p className="text-gray-600 mb-4 font-semibold">Stock Total: <span className="text-gray-800">{modalState.book.cantidad_total}</span></p>
+            <p className="text-gray-600 mb-4 font-semibold">Ejemplares: <span className="text-gray-800">{modalState.book.cantidad_total}</span></p>
             <p className="text-gray-600 mb-4 font-semibold">Disponibles: <span className="text-gray-800">{modalState.book.cantidad_disponible}</span></p>
             <p className="text-gray-600 mb-4 font-semibold">Páginas: <span className="text-gray-800">{modalState.book.Paginas}</span></p>
             <p className="text-gray-600 mb-4 font-semibold">Año de publicación: <span className="text-gray-800">{modalState.book.anio_publicacion}</span></p>
@@ -234,7 +234,7 @@ function TablaLibros() {
               </div>
               
               <div className="mb-4">
-                <label className="block text-gray-700 mb-2" htmlFor="cantidad_total">Stock Total</label>
+                <label className="block text-gray-700 mb-2" htmlFor="cantidad_total">Ejemplares</label>
                 <input
                   type="number"
                   id="cantidad_total"

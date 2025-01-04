@@ -127,7 +127,14 @@ function RegistrarMultas() {
           Authorization: `Bearer ${getToken()}`,
         },
       });
-
+      const responseRegister = await axiosInstance.post("/registerData/add", {
+        text:`Se ha agregado una multa al usuario ${formData.nombreUsuario} con el libro ${formData.tituloLibro}`,
+        time : new Date(),
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       if (response.status === 200) {
         alert('Multa registrada con éxito');
       } else {

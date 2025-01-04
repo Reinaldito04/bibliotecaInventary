@@ -35,6 +35,7 @@ function Page() {
     name: "",
     email: "",
     password: "",
+    role: "",
   });
 
   const handleInputChange = (e) => {
@@ -77,7 +78,7 @@ function Page() {
       username: userData.name,
       email: userData.email,
       password: userData.password,
-      role: 'Admin',
+      role: userData.role,
     };
 
     try {
@@ -86,10 +87,19 @@ function Page() {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+
+      const responseRegister = await axiosInstance.post("/registerData/add", {
+        text:"Se ha registrado al usuario "+userData.name,
+        time : new Date(),
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       console.log(response.data);
       myswal.fire({
         icon: "success",
-        title: "Administrador registrado exitosamente",
+        title: "Usuario registrado exitosamente",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -97,13 +107,14 @@ function Page() {
         name: "",
         email: "",
         password: "",
+        role: "",
       });
       loadUsers();
     } catch (error) {
-      console.error("Error al registrar el administrador:", error);
+      console.error("Error al registrar el usuario:", error);
       myswal.fire({
         icon: "error",
-        title: "Error al registrar el administrador",
+        title: "Error al registrar al usuario",
         showConfirmButton: false,
         timer: 1500,
       });
@@ -157,7 +168,7 @@ function Page() {
 
         {/* Formulario de registro de administrador */}
         <section className="bg-white p-6 rounded shadow">
-          <h3 className="text-xl font-medium mb-2">Registrar Administradores</h3>
+          <h3 className="text-2xl font-medium mb-2">Registrar Usuarios</h3>
           <form onSubmit={handleSubmitRegisterAdmin} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-gray-600 mb-1">Nombre</label>
@@ -194,6 +205,21 @@ function Page() {
                 className="w-full border border-gray-300 rounded px-3 py-2"
                 required
               />
+            </div>
+            <div>
+              <label htmlFor="confirmPassword" className="block text-gray-600 mb-1">Tipo de Usuario</label>
+              <select
+                id="role"
+                name="role"
+                value={userData.role}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 rounded px-3 py-2"
+                required
+              >
+                <option value="" disabled>Seleccione un rol</option>
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+              </select>
             </div>
             <button
               type="submit"

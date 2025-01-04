@@ -86,7 +86,16 @@ function RegistrarPrestamo() {
           },
         }
       );
-  
+      const responseRegister = await axiosInstance.post("/registerData/add", {
+        text:"Se ha registrado un prestamo para el usuario "+formData.nombreUsuario,
+        time : new Date(),
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+      console.log("Libros:", response.data);
+
       // Comprobar si la respuesta tiene el código de éxito (200)
       if (response.status === 200) {
         alert("Préstamo registrado con éxito");

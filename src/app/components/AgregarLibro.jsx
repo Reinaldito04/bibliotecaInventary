@@ -65,6 +65,15 @@ function AgregarLibro() {
           Authorization: `Bearer ${getToken()}`,
         },
       });
+      const responseRegister = await axiosInstance.post("/registerData/add", {
+        text:"Se ha agregado el libro "+formData.title,
+        time : new Date(),
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
+
       alert("Libro agregado con éxito");
     } catch (error) {
       if (error.response) {
@@ -109,7 +118,7 @@ function AgregarLibro() {
                   { label: "Categoría", id: "category", placeholder: "Ingrese la categoría del libro" },
                   { label: "Editorial", id: "editorial", placeholder: "Ingrese la editorial del libro" },
                   { label: "Año de publicación", id: "year", placeholder: "Ingrese el año de publicación del libro" },
-                  { label: "Stock", id: "stock", placeholder: "Ingrese el stock del libro", type: "number" },
+                  { label: "Número de ejemplares", id: "stock", placeholder: "Ingrese el número de ejemplares", type: "number" },
                   { label: "Páginas", id: "pages", placeholder: "Ingrese la cantidad de páginas", type: "number" },
                   { label: "Ubicación", id: "ubicacion", placeholder: "Ingrese la ubicación del libro" },
                 ].map((input) => (

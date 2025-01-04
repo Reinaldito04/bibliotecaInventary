@@ -9,7 +9,7 @@
     { key: "cantidadMultas", url: "/information/getFinesCantity", title: "Multas ", icon: <FaMoneyBillWave />, description: "Multas activas" },
     { key: "cantidadReservas", url: "/information/getReservesCantity", title: "Reservas", icon: <FaCalendarCheck />, description: "Reservas totales" },
     { key: "cantidadPrestamos", url: "/information/getLeans", title: "Préstamos ", icon: <FaBookOpen />, description: "Préstamos en curso" },
-    { key: "cantidadStockLibros", url: "/information/getBooksStock", title: "Stock de Libros", icon: <FaBook />, description: "Stock total de libros" },
+    { key: "cantidadStockLibros", url: "/information/getBooksStock", title: "Libros", icon: <FaBook />, description: "Stock total de libros" },
     { key: "cantidadUsers", url: "/information/getCantityUsers", title: "Usuarios ", icon: <FaUser />, description: "Usuarios totales" },
   ];
 

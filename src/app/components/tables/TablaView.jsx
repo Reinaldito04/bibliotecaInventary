@@ -27,8 +27,9 @@ function TablaView() {
       const response = await axiosInstance.get("/leans/", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
+      console.log(response.data);
      const filtrosLibros = response.data.filter(
-      (libros) => !libros.DateReal || libros.DateReal ==='No entregado aún'
+      (libros) => !libros.DateReal || libros.DateReal ==='No entregado aún'
      );
       
       setLibrosData(filtrosLibros);
@@ -122,7 +123,7 @@ function TablaView() {
                   <td className="py-2 px-4 border-b">{libro.DateEnd}</td>
                   <td className="py-2 px-4 border-b">{libro.Username}</td>
                   <td className="py-2 px-4 border-b">{libro.DateReal}</td>
-                  {libro.DateReal === "No entregado aún" ? (
+                  {libro.DateReal === "No entregado aún" ? (
                     <td className="py-2 px-4 border-b">
                       <button
                         onClick={() => handleEntregaClick(libro)}
