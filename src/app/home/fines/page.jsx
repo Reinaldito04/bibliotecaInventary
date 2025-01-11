@@ -1,6 +1,6 @@
 import UserLayout from "@/app/componentsUser/sidebarUser";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import TableMultas from "@/app/components/tables/TableMultas";
+import TableMultas from "./components/TableMultas";
 function page() {
   return (
     <UserLayout>

@@ -50,8 +50,8 @@ function Login() {
         </div>
 
         {/* Título */}
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-2">
-          Bienvenido a <span className="text-blue-500">Biblioteca</span>
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-2 text-center">
+          Bienvenido a la <span className="text-blue-500 text-center">Biblioteca Msc. 'Estelio Velasquez' Uts Anaco </span>
         </h1>
         <p className="text-sm text-gray-600 mb-6">
           Ingresa tus credenciales para acceder a tu cuenta.

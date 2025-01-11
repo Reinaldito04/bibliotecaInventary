@@ -77,7 +77,7 @@ function TablaMultas() {
               <tr key={fine.ID} className="border-t hover:bg-gray-100">
                 <td className="py-3 px-4">{fine.ID}</td>
                 <td className="py-3 px-4">{fine.Estado}</td>
-                <td className="py-3 px-4">${fine.MontoMulta.toFixed(2)}</td>
+                <td className="py-3 px-4">${fine.MontoMulta.toFixed(2)}BS</td>
                 <td className="py-3 px-4">{fine.DateStart}</td>
                 <td className="py-3 px-4">{fine.DateEnd}</td>
                 <td className="py-3 px-4">{fine.Titulo}</td>

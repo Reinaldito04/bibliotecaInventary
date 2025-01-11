@@ -1,48 +1,75 @@
 "use client";
-import React from "react";
-import { useState } from "react";
+
+import React, { useState } from "react";
 import { axiosInstance } from "../utils/axiosinstace";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function Registrar() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
+    if (!username || !email || !password) {
+      toast.error("Todos los campos son obligatorios.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return;
+    }
+
     try {
-      // Agregar Content-Type para asegurar que se enviará en formato x-www-form-urlencoded
+      setLoading(true);
       const response = await axiosInstance.post("/auth/register", {
         username,
         email,
         password,
-        role : "User"
+        role: "User",
       });
 
-      // Almacenar el token en el localStorag
-      // Redirigir a la página correspondiente
-      window.location.href = "/";
+      toast.success("Usuario registrado con éxito.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 3000);
     } catch (error) {
+      toast.error("Error al registrar el usuario. Intente nuevamente.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
-  return (
-    <div className="w-full max-w-lg p-5 flex flex-col bg-white shadow-lg rounded-lg mx-auto mt-10">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-        Register User
-      </h1>
 
-      <section className="w-full flex flex-col gap-6">
+  return (
+    <div className="w-full max-w-lg p-6 flex flex-col bg-white shadow-md rounded-lg mx-auto mt-10">
+      <ToastContainer />
+      <h1 className="text-4xl font-semibold text-gray-800 mb-6 text-center">
+        Registrar Usuario
+      </h1>
+      <section className="w-full flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <label className="text-gray-700 text-lg font-medium" htmlFor="name">
-            Name
+          <label
+            className="text-gray-700 text-lg font-medium"
+            htmlFor="username"
+          >
+            Nombre
           </label>
           <input
-            className="border border-gray-800 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-black"
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-black"
             type="text"
-            name="name"
-            id="name"
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your name"
+            placeholder="Ingrese su nombre"
+            aria-label="Nombre de usuario"
           />
         </div>
 
@@ -51,13 +78,13 @@ function Registrar() {
             Email
           </label>
           <input
-            className="border border-gray-800 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-black"
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-black"
             type="email"
-            name="email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            id="email"
-            placeholder="Enter your email"
+            placeholder="Ingrese su correo electrónico"
+            aria-label="Correo electrónico"
           />
         </div>
 
@@ -66,25 +93,30 @@ function Registrar() {
             className="text-gray-700 text-lg font-medium"
             htmlFor="password"
           >
-            Password
+            Contraseña
           </label>
           <input
-            className="border border-gray-800 text-black p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+            className="border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 text-black"
             type="password"
-            name="password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            id="password"
-            placeholder="Enter your password"
+            placeholder="Ingrese su contraseña"
+            aria-label="Contraseña"
           />
         </div>
 
         <button
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-200"
+          className={`w-full py-3 rounded-lg text-white ${
+            loading
+              ? "bg-blue-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          } transition duration-200`}
           type="submit"
           onClick={handleRegister}
+          disabled={loading}
         >
-          Register
+          {loading ? "Registrando..." : "Registrar"}
         </button>
       </section>
     </div>

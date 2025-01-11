@@ -8,7 +8,7 @@ function DashboardPage() {
 
   return (
     <Layout>
-      <h2 className="text-2xl font-semibold mb-4">Welcome to the Dashboard, <Username /></h2>
+      <h2 className="text-2xl font-semibold mb-4">Bienvenido al panel de administración, <Username /></h2>
       <CardInformations />
     </Layout>
   );

@@ -23,7 +23,7 @@ function TableMultas() {
 
   const fetchBooks = async () => {
     try {
-      const response = await axiosInstance.get(`/fines/getFines`, {
+      const response = await axiosInstance.get(`/fines/getFines/${localStorage.getItem("username")}`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setLibrosData(response.data);

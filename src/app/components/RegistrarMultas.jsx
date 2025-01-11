@@ -213,7 +213,7 @@ function RegistrarMultas() {
           />
         </div>
         <div>
-          <label htmlFor="montoMulta" className="block text-gray-700 font-medium mb-2">Monto de la multa ($):</label>
+          <label htmlFor="montoMulta" className="block text-gray-700 font-medium mb-2">Monto de la multa (BS):</label>
           <input
             id="montoMulta"
             type="number"
