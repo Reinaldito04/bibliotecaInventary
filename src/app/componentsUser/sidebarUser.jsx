@@ -64,7 +64,7 @@ export default function UserLayout({ children }) {
             <FaUser />
             {sidebarOpen && <span>Perfil</span>}
           </Link>
-          <Link href="/about" className="flex items-center gap-4 p-2 hover:bg-green-600 rounded">
+          <Link href="./manual.pdf" className="flex items-center gap-4 p-2 hover:bg-green-600 rounded">
             <FaInfo />
             {sidebarOpen && <span>Información</span>}
           </Link>

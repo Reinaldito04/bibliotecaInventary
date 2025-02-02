@@ -7,7 +7,7 @@ function page() {
       <Breadcrumbs />
       <div className="container mx-auto px-6 py-8 bg-gray-50 ">
         <h1 className="text-3xl font-bold mb-6 text-black-600">
-          Libros Prestados Para Mi
+          Libros Prestados 
         </h1>
         <TablaPrestados />
       </div>

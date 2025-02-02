@@ -22,7 +22,7 @@ export default async function Page() {
 
           <Link href="/home/leans">
             <div className="bg-gradient-to-r from-green-500 to-green-400 text-white p-6 rounded-lg shadow-md hover:shadow-xl transform hover:scale-105 transition-transform duration-300 cursor-pointer">
-              <h3 className="text-2xl font-semibold mb-3">Libros prestados para mí</h3>
+              <h3 className="text-2xl font-semibold mb-3">Libros prestados</h3>
               <p className="text-white/90">Ver libros que tienes prestados.</p>
             </div>
           </Link>
